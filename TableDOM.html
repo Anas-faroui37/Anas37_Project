@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Facture avec DOM JavaScript</title>
+    <script>
+        function Ajouter() {
+            let tab = document.getElementById('Mytab'); 
+            let art = document.getElementById('article').value;
+            let prix = parseFloat(document.getElementById('prix').value); 
+            let qnt = parseInt(document.getElementById('quantite').value); 
+
+            if (!art || isNaN(prix) || isNaN(qnt) || prix <= 0 || qnt <= 0) {
+                alert("Veuillez entrer des valeurs valides pour l'article, le prix et la quantité.");
+                return;
+            }
+
+            let montant = prix * qnt;
+
+            let tr = tab.insertRow(tab.rows.length - 1); 
+            let td1 = tr.insertCell(0);
+            let td2 = tr.insertCell(1);
+            let td3 = tr.insertCell(2);
+            let td4 = tr.insertCell(3);
+
+            td1.textContent = art;
+            td2.textContent = qnt;
+            td3.textContent = prix.toFixed(2);
+            td4.textContent = montant.toFixed(2);
+
+            tr.style.backgroundColor = (tab.rows.length % 2 === 0) ? "lightgray" : "white"; 
+
+            Foot(montant);
+
+            document.getElementById('article').value = "";
+            document.getElementById('prix').value = "";
+            document.getElementById('quantite').value = "";
+        }
+///////// insertion foot ---==-=-=
+        function Foot(montant) {
+            let total = document.getElementById('montant');
+            total.textContent = (parseFloat(total.textContent) + montant).toFixed(2);
+        }
+///// supromer -------
+        function Supprimer() {
+            let indice = parseInt(prompt("Donner l'indice de la ligne que vous voulez supprimer (à partir de 1) :"));
+            let tab = document.getElementById('Mytab');
+
+// condition de validation ----------------------------------
+            if (isNaN(indice) || indice <= 0 || indice >= tab.rows.length - 1) {
+                alert("Indice invalide !");
+                return;
+            }
+
+            let montantLigne = parseFloat(tab.rows[indice].cells[3].textContent);
+            Foot(-montantLigne);
+
+            tab.deleteRow(indice);
+        }
+        function colorer() {
+    let table = document.getElementById('Mytab');
+    if (table) {
+        table.style.backgroundColor = "lightblue"; 
+        table.style.color = "darkblue";           
+    }
+}
+
+    </script>
+</head>
+<body id="dd">
+    <fieldset id="fid">
+        <legend>Facture</legend>
+        <table>
+            <tr>
+                <td><label for="article">Entrer article :</label></td>
+                <td><input type="text" id="article"></td>
+            </tr>     
+            <tr>
+                <td><label for="prix">Entrer prix unitaire :</label></td>
+                <td><input type="number" id="prix"></td>
+            </tr>
+            <tr>
+                <td><label for="quantite">Entrer quantité :</label></td>
+                <td><input type="number" id="quantite"></td>
+            </tr>
+            <tr>
+                <td colspan="2"><input type="button" value="Insérer ligne" onclick="Ajouter()"></td>
+                <td colspan="2"><input type="button" value="Supprimer ligne" onclick="Supprimer()"></td>
+                <td colspan="2"><input type="button" value="colorer" onclick="colorer()"></td>
+            </tr>
+        </table>
+    </fieldset>
+    <script>
+        document.body.style.backgroundColor = "Yellow";
+        let fid = document.getElementById("fid");
+        fid.style.backgroundColor = "gold";
+        fid.style.border = "2px solid green";
+        fid.style.width = "700px";
+
+        let tab = document.createElement('table');
+        tab.id = "Mytab";
+        tab.border = "2";
+        tab.style.borderColor = "blue";
+        tab.style.width = "710px";
+        tab.style.marginTop = "20px";
+        document.body.appendChild(tab);
+
+        let tr = document.createElement('tr');
+        tr.style.backgroundColor = "yellowgreen"; 
+        tr.style.color = "black"; 
+        tab.appendChild(tr);
+
+        let th1 = document.createElement('th');
+th1.textContent = "Item";
+tr.appendChild(th1);
+
+let th2 = document.createElement('th');
+th2.textContent = "Quantité";
+tr.appendChild(th2);
+
+let th3 = document.createElement('th');
+th3.textContent = "Prix";
+tr.appendChild(th3);
+
+let th4 = document.createElement('th');
+th4.textContent = "Montant";
+tr.appendChild(th4);
+
+
+        let trr = document.createElement('tr');
+        let tdd1 = document.createElement('td');
+        tdd1.colSpan = "3";
+        tdd1.textContent = "Total Facture";
+        trr.appendChild(tdd1);
+
+        let tdd2 = document.createElement('td');
+        tdd2.textContent = "0";
+        tdd2.id = 'montant';
+        trr.appendChild(tdd2);
+
+        tab.appendChild(trr);
+    </script>
+</body>
+</html>
